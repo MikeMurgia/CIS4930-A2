@@ -25,21 +25,21 @@ Open http://localhost:5173. API docs: http://localhost:8000/docs.
 The API base URL is the one constant `API` at the top of `frontend/js/script.js`.
 No credentials or required environment variables.
 
-## Data: synthetic by default, ESA-ADB on request
+## Data
 
-The ZIP ships with **synthetic demo data** (a yellow banner in the UI says so). To use the real dataset:
+`backend/data/events.csv` holds the 644 labeled events of ESA-ADB Mission 2 (labels, anomaly types, channel/subsystem metadata, and two features computed from the telemetry: variance ratio and frozen share). The raw telemetry (several GB) is not included.
 
-```bash
-cd backend
-python prep_data.py /path/to/ESA-ADB            # reads labels, types, channels AND telemetry (computes features)
-python prep_data.py /path/to/ESA-ADB --no-features   # faster; panel A then shows only duration + channels touched
-ESA_ROOT=/path/to/ESA-ADB uvicorn main:app --port 8000    # lets panel C read real signals
-```
-Expected layout: `ESA-Mission1/{labels.csv, anomaly_types.csv, channels.csv}` plus per-channel telemetry files
-(`channel_N.zip|parquet|pkl|csv`) anywhere below the mission folder. The reader was written from memory of that layout and
-checked only against a small fake dataset following the same assumptions. `prep_data.py` prints the columns it finds; if
-the real names differ, adjust `esa()` (labels) or `load_series()` in `telemetry.py` (signal files).
-If a channel file is missing, panel C falls back to a clearly labelled synthetic signal.
+To rebuild from the original dataset:
+
+    cd backend
+    python prep_data.py /path/to/ESA-ADB/ESA-Mission2
+    # PowerShell:  $env:ESA_ROOT = (Resolve-Path .\data).Path ; python -m uvicorn main:app --port 8000
+
+Data source: ESA Anomaly Detection Benchmark (ESA-ADB), <add the citation and licence from the dataset page>.
+
+## Hosted version (GitHub Pages)
+
+Live site: [<your github.io URL>](https://mikemurgia.github.io/CIS4930-A2/). GitHub Pages cannot run FastAPI, so the hosted site is a static export: the same JSON the API returns, saved under `frontend/api/` (meta, events, and the downsampled signals for every event). The page switches to those files automatically on `github.io` (or with `?static` in the URL). The live FastAPI backend is in `backend/` and is what runs on localhost.
 
 ## Views and coordination
 

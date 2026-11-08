@@ -77,6 +77,10 @@ def signals(event_id: str, channels: int = 3, points: int = 240):
     """Server-side computation: pull a window around the event, downsample, run the baseline detector."""
     if event_id not in by_id.index:
         raise HTTPException(404, "unknown event")
+    if not (ESA_ROOT and Path(ESA_ROOT).exists()):
+        snap = Path(__file__).resolve().parent.parent / "frontend" / "api" / "signals" / f"{event_id}.json"
+        if snap.exists():
+            return json.loads(snap.read_text(encoding="utf-8"))
     e = by_id.loc[event_id]
     names = [c for c in e["channels"].split("|") if c][:channels] or ["channel"]
     pad = max(e["end"] - e["start"], pd.Timedelta(hours=1))

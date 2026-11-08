@@ -52,7 +52,7 @@ def _read_bytes(name: str, raw: bytes):
     raise ValueError(f"could not decode {name} ({'; '.join(errors)})")
 
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=6)
 def load_series(path: str) -> pd.Series:
     p = Path(path)
     if p.suffix.lower() == ".zip":
