@@ -1,0 +1,1 @@
+{"source":"esa-adb","missions":[2],"features":[{"k":"duration_h","n":"duration (h)","log":true},{"k":"n_channels","n":"channels touched","log":false},{"k":"var_ratio","n":"variance ratio","log":false},{"k":"flat_share","n":"frozen share","log":false}],"counts":{"2":644}}

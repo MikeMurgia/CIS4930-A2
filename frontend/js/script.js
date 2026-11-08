@@ -1,6 +1,17 @@
 // Spacecraft Anomaly Explorer. One shared state object S; every view re-renders from it.
 const API = "http://localhost:8000"; // single constant: point this at a deployed backend
 
+// Static mode (GitHub Pages): read pre-saved copies of the API's JSON from frontend/api/
+const STATIC = location.hostname.endsWith("github.io") || /[?&]static/.test(location.search);
+function apiFetch(path) {
+  if (!STATIC) return fetch(API + path);
+  let m;
+  if (path === "/api/meta") return fetch("api/meta.json");
+  if ((m = path.match(/^\/api\/events\?mission=(\d+)/))) return fetch(`api/events-${m[1]}.json`);
+  if ((m = path.match(/^\/api\/event\/([^/]+)\/signals/))) return fetch(`api/signals/${decodeURIComponent(m[1])}.json`);
+  return Promise.reject(new Error("no static file for " + path));
+}
+
 const S = { mission: null, filt: {}, dom: null, sel: null };
 let META, EV = [], SUBS = [], DIMS = [];
 let parBrushes = [], timeBrush = null, timeBrushG = null;
@@ -44,7 +55,7 @@ function emptyMsg(svg, W, H, msg) {
 // ---------- boot ----------
 async function boot() {
   try {
-    META = await (await fetch(API + "/api/meta")).json();
+    META = await (await apiFetch("/api/meta")).json();
   } catch (e) {
     $("status").textContent = "Cannot reach the backend at " + API + ". Start it first (see README).";
     return;
@@ -63,7 +74,7 @@ async function boot() {
 async function loadMission(m) {
   $("status").textContent = "Loading mission " + m + "…";
   let res;
-  try { res = await (await fetch(`${API}/api/events?mission=${m}`)).json(); }
+  try { res = await (await apiFetch(`/api/events?mission=${m}`)).json(); }
   catch (e) { $("status").textContent = "Backend request failed."; return; }
   S.mission = m; S.filt = {}; S.dom = null; S.sel = null;
   EV = res.events.map((e) => ({ ...e, start: new Date(e.start), end: new Date(e.end) }));
@@ -202,7 +213,7 @@ async function loadSignals(e) {
   $("r-sel").textContent = `${e.id} · ${e.category}${e.type ? " (" + e.type + ")" : ""} · ${e.n_channels} channels`;
   drawSignalsEmpty("Loading signals…"); $("r-sel").textContent = `${e.id} · loading…`;
   let res;
-  try { res = await (await fetch(`${API}/api/event/${encodeURIComponent(e.id)}/signals`)).json(); }
+  try { res = await (await apiFetch(`/api/event/${encodeURIComponent(e.id)}/signals`)).json(); }
   catch (err) { if (id === sigReq) drawSignalsEmpty("Could not load signals."); return; }
   if (id !== sigReq) return; // a newer click superseded this one
   $("r-sel").textContent = `${e.id} · ${e.category}${e.type ? " (" + e.type + ")" : ""} · ${e.n_channels} channels`;
