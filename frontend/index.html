@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spacecraft Anomaly Explorer</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Spacecraft Anomaly Explorer</h1>
+      <p class="sub">Which events look like true anomalies, when do they cluster, and which subsystems do they touch?</p>
+    </div>
+    <div class="controls">
+      <label>Mission <select id="mission"></select></label>
+      <button id="clear" type="button">Clear all selections</button>
+    </div>
+  </header>
+
+  <div class="flow"><span><b>1</b> filter events by features</span><span><b>2</b> brush a time window</span><span><b>3</b> click an event</span><span><b>4</b> signals and subsystems update</span></div>
+  <div id="banner" hidden></div>
+  <div id="status" role="status" aria-live="polite"></div>
+
+  <section class="panel">
+    <div class="ph"><h2>A &middot; Event features</h2><span>drag on an axis to filter</span></div>
+    <div class="chart"><svg id="par"></svg></div>
+    <p class="cap">Each line is one event across its features. Filters combine (AND). Non-matching events fade in every other view.</p>
+  </section>
+
+  <section class="panel">
+    <div class="ph"><h2>B &middot; Event timeline</h2><span id="r-time"></span></div>
+    <div class="chart"><svg id="time"></svg></div>
+    <div class="legend" id="leg-cat"></div>
+    <p class="cap">Top strip: every event in the mission; <b>drag to choose a window</b>. Bottom: events in the window by number of channels touched; <b>click a dot</b> to inspect it.</p>
+  </section>
+
+  <div class="row">
+    <section class="panel">
+      <div class="ph"><h2>C &middot; Linked signals</h2><span id="r-sel">no event selected</span></div>
+      <div class="chart"><svg id="chan"></svg></div>
+      <div class="legend"><span><i class="sw" style="background:var(--accent);opacity:.3"></i>labeled event window</span><span><i class="dash"></i>baseline detector alarm</span><span id="syn"></span></div>
+      <p class="cap">Up to three channels around the selected event, downsampled on the server (the first, middle and last third of each trace are the before / during / after of the event).</p>
+    </section>
+    <section class="panel">
+      <div class="ph"><h2>D &middot; Subsystem heatmap</h2><span>share of events touching each subsystem</span></div>
+      <div class="chart"><svg id="heat"></svg></div>
+      <p class="cap">Rows: the selected event, then each event category among events that match the filters and window.</p>
+    </section>
+  </div>
+</main>
+<div id="tip" class="tip" hidden></div>
+<script src="js/vendor/d3.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+
+# Secrets / local config
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Raw ESA-ADB telemetry (huge) -- never commit. Only backend/data/events.csv + source.json are tracked.
+backend/data/ESA-Mission*/
+backend/data/ESA-ADB*/
+
+# Submission archives and recordings do not belong in the repo
+*.zip
+*.mp4
+*.mov
