@@ -39,7 +39,7 @@ Data source: ESA Anomaly Detection Benchmark (ESA-ADB), <add the citation and li
 
 ## Hosted version (GitHub Pages)
 
-Live site: [<your github.io URL>](https://mikemurgia.github.io/CIS4930-A2/). GitHub Pages cannot run FastAPI, so the hosted site is a static export: the same JSON the API returns, saved under `frontend/api/` (meta, events, and the downsampled signals for every event). The page switches to those files automatically on `github.io` (or with `?static` in the URL). The live FastAPI backend is in `backend/` and is what runs on localhost.
+Live site: https://mikemurgia.github.io/CIS4930-A2/. GitHub Pages cannot run FastAPI, so the hosted site is a static export: the same JSON the API returns, saved under `frontend/api/` (meta, events, and the downsampled signals for every event). The page switches to those files automatically on `github.io` (or with `?static` in the URL). The live FastAPI backend is in `backend/` and is what runs on localhost.
 
 ## Views and coordination
 

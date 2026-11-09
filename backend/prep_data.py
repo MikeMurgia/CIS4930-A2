@@ -149,7 +149,7 @@ def add_features(root, mission, g):
                 continue
             acc[i]["vr"].append(float(w.var() / b.var()))
             acc[i]["fl"].append(float((w.diff().dropna() == 0).mean()))
-        telemetry.load_series.cache_clear()  # signal files are large; do not hold them in memory
+        telemetry.load_series.cache_clear()  
         print(f"  features: {n}/{len(by_channel)} channels ({ch})")
     print(f"  Mission {mission}: telemetry read for {found}/{len(by_channel)} channels")
     for i, a in acc.items():
